@@ -1,0 +1,90 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Introduction to Java — 40-item Quiz</title>
+  <style>
+    body{font-family:Inter,Arial,sans-serif;background:#0b1220;color:#e6eef6;margin:0;padding:32px;line-height:1.5}
+    .container{max-width:960px;margin:auto}
+    h1{font-size:22px;margin-bottom:6px}
+    p{color:#94a3b8;margin-top:0}
+    .card{background:#111a2e;padding:24px;border-radius:12px;box-shadow:0 6px 14px rgba(0,0,0,0.6)}
+    button{background:#06b6d4;border:none;padding:10px 18px;border-radius:8px;color:#041b20;font-weight:600;cursor:pointer;margin-right:10px}
+    button.ghost{background:transparent;color:#94a3b8;border:1px solid #1e293b}
+    .question{background:rgba(255,255,255,0.04);padding:12px;border-radius:10px;margin-bottom:10px}
+    .choices label{display:block;margin-bottom:4px;cursor:pointer}
+    input[type=radio]{accent-color:#06b6d4;margin-right:6px}
+    .correct{background:rgba(46,204,113,0.15)}
+    .wrong{background:rgba(239,68,68,0.15)}
+    #result{display:none;margin-top:16px;padding:12px;background:#0f172a;border-radius:10px}
+    #answerKey{display:none;margin-top:16px;background:#0f172a;border-radius:10px;padding:16px}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Introduction to Java — 40-item Quiz</h1>
+  <p>Midterm multiple-choice quiz based on the Introduction to Java topic. Answer all items then click Submit.</p>
+  <div class="card">
+    <div style="margin-bottom:16px">
+      <button id="submit">Submit</button>
+      <button id="reset" class="ghost">Reset</button>
+      <button id="toggleKey" class="ghost">Toggle Answer Key</button>
+    </div>
+    <form id="quiz"></form>
+    <div id="result"></div>
+    <div id="answerKey"></div>
+  </div>
+</div>
+<script>
+const quiz=[
+{q:'Who developed Java programming language?',c:['Dennis Ritchie','James Gosling','Guido van Rossum','Bjarne Stroustrup'],a:1},
+{q:'In which year was Java officially released?',c:['1991','1995','2000','1989'],a:1},
+{q:'Which company originally owned Java?',c:['Microsoft','Sun Microsystems','Oracle','IBM'],a:1},
+{q:'Java was initially called _______.',c:['CoffeeLang','GreenTalk','Oak','Latte'],a:2},
+{q:'What symbol is used to end a statement in Java?',c:['.',';',':',','],a:1},
+{q:'Java was designed for what type of device before becoming a general-purpose language?',c:['Desktop computers','Televisions','Embedded systems','Mobile phones'],a:2},
+{q:'Which of the following best describes Java?',c:['Low-level language','High-level, object-oriented language','Assembly language','Machine language'],a:1},
+{q:'Java programs are compiled into ______.',c:['Binary files','Bytecode','Assembly code','Machine code'],a:1},
+{q:'The philosophy “Write Once, Run Anywhere” refers to ______.',c:['Portability','Security','Simplicity','Speed'],a:0},
+{q:'What does JVM stand for?',c:['Java Variable Machine','Java Virtual Machine','Java Verified Module','Java Version Manager'],a:1},
+{q:'Which of the following is NOT a Java edition?',c:['Java SE','Java EE','Java ME','Java XE'],a:3},
+{q:'Which component provides libraries and tools for developers?',c:['JVM','JDK','JRE','JAR'],a:1},
+{q:'The JRE contains ______.',c:['Compiler and debugger','Java compiler only','JVM and class libraries','Only the JVM'],a:2},
+{q:'Which of these compiles Java source code into bytecode?',c:['javac','java','jar','javadoc'],a:0},
+{q:'The file extension for a Java source file is ______.',c:['.jav','.java','.class','.jar'],a:1},
+{q:'The file extension for compiled Java bytecode is ______.',c:['.jav','.java','.class','.exe'],a:2},
+{q:'Which of the following runs Java bytecode?',c:['JVM','JRE','JDK','Compiler'],a:0},
+{q:'Java is considered platform-independent because ______.',c:['It uses machine code','Bytecode runs on JVM across OS','It’s written in C','It doesn’t require compilation'],a:1},
+{q:'What is the entry point of every Java program?',c:['main() method','start() method','init() method','begin() method'],a:0},
+{q:'Which keyword defines a class in Java?',c:['define','function','class','object'],a:2},
+{q:'Which of the following is NOT a Java feature?',c:['Object-oriented','Portable','Low-security','Robust'],a:2},
+{q:'Which statement displays output in Java?',c:['echo','System.out.print()','printf()','cout'],a:1},
+{q:'Java source files are first translated into ______.',c:['Assembly','Bytecode','Machine code','Binary'],a:1},
+{q:'Which part of Java ensures automatic memory management?',c:['JDK','Garbage Collector','Compiler','Interpreter'],a:1},
+{q:'Which company now owns Java?',c:['Google','Microsoft','Oracle','IBM'],a:2},
+{q:'What is the correct syntax to print “Hello World”?',c:['print("Hello World");','System.out.println("Hello World");','echo("Hello World");','printf("Hello World");'],a:1},
+{q:'Which data type is used to store whole numbers in Java?',c:['int','float','boolean','String'],a:0},
+{q:'In Java, a class name should start with ______.',c:['a lowercase letter','an uppercase letter','a digit','a symbol'],a:1},
+{q:'What does JDK stand for?',c:['Java Development Kit','Java Design Kernel','Java Desktop Kit','Java Dynamic Key'],a:0},
+{q:'Which of the following is a Java keyword?',c:['program','new','print','main'],a:1},
+{q:'Which statement is true about Java?',c:['It’s compiled and interpreted','It’s only interpreted','It’s only compiled','It’s not compiled'],a:0},
+{q:'Which of these helps run Java programs on any OS?',c:['API','IDE','JVM','SDK'],a:2},
+{q:'The first step in running a Java program is to ______.',c:['Run the JVM','Compile source code using javac','Write bytecode','Run JAR file'],a:1},
+{q:'Which of these is used to group classes in Java?',c:['Packages','Modules','Namespaces','Groups'],a:0},
+{q:'Java comments start with which symbols?',c:['#','# #','//','--'],a:2},
+{q:'The method System.out.println() belongs to which class?',c:['System','Console','Main','Print'],a:0},
+{q:'Which Java edition is used for developing mobile apps?',c:['Java SE','Java EE','Java ME','Java FX'],a:2},
+{q:'Which Java feature makes it secure?',c:['Pointer manipulation','Bytecode verification','Manual memory allocation','Hardware dependence'],a:1},
+{q:'Which tool is used to bundle Java classes into a single file?',c:['javac','jar','javadoc','javap'],a:1}
+];const quizEl=document.getElementById('quiz'); const resultEl=document.getElementById('result'); const answerKey=document.getElementById('answerKey');
+
+quiz.forEach((q,i)=>{ const div=document.createElement('div'); div.className='question'; div.innerHTML=<h3>${i+1}. ${q.q}</h3>+ q.c.map((c,idx)=><label><input type="radio" name="q${i}" value="${idx}">${String.fromCharCode(65+idx)}. ${c}</label>).join(''); quizEl.appendChild(div); });
+
+document.getElementById('submit').onclick=e=>{ e.preventDefault(); const data=new FormData(quizEl); let score=0; document.querySelectorAll('.question').forEach((el,i)=>{ const ans=data.get('q'+i); el.classList.remove('correct','wrong'); if(ans!==null && Number(ans)===quiz[i].a){score++;el.classList.add('correct');} else el.classList.add('wrong'); }); const pct=Math.round(score/quiz.length*100); resultEl.style.display='block'; resultEl.innerHTML=<strong>Score:</strong> ${score}/40 (${pct}%) — ${pct>=75?'Passed 🎉':'Needs Review'}; answerKey.innerHTML='<h3>Answer Key</h3>'+quiz.map((q,i)=><p><strong>${i+1}.</strong> ${String.fromCharCode(65+q.a)} - ${q.c[q.a]}</p>).join(''); };
+
+document.getElementById('reset').onclick=e=>{e.preventDefault();quizEl.reset();document.querySelectorAll('.question').forEach(q=>q.classList.remove('correct','wrong'));resultEl.style.display='none';answerKey.style.display='none';}; document.getElementById('toggleKey').onclick=e=>{e.preventDefault();answerKey.style.display=answerKey.style.display==='block'?'none':'block';}; </script>
+
+</body>
+</html>
