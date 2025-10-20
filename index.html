@@ -1,90 +1,618 @@
-<!doctype html>
-
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Introduction to Java — 40-item Quiz</title>
-  <style>
-    body{font-family:Inter,Arial,sans-serif;background:#0b1220;color:#e6eef6;margin:0;padding:32px;line-height:1.5}
-    .container{max-width:960px;margin:auto}
-    h1{font-size:22px;margin-bottom:6px}
-    p{color:#94a3b8;margin-top:0}
-    .card{background:#111a2e;padding:24px;border-radius:12px;box-shadow:0 6px 14px rgba(0,0,0,0.6)}
-    button{background:#06b6d4;border:none;padding:10px 18px;border-radius:8px;color:#041b20;font-weight:600;cursor:pointer;margin-right:10px}
-    button.ghost{background:transparent;color:#94a3b8;border:1px solid #1e293b}
-    .question{background:rgba(255,255,255,0.04);padding:12px;border-radius:10px;margin-bottom:10px}
-    .choices label{display:block;margin-bottom:4px;cursor:pointer}
-    input[type=radio]{accent-color:#06b6d4;margin-right:6px}
-    .correct{background:rgba(46,204,113,0.15)}
-    .wrong{background:rgba(239,68,68,0.15)}
-    #result{display:none;margin-top:16px;padding:12px;background:#0f172a;border-radius:10px}
-    #answerKey{display:none;margin-top:16px;background:#0f172a;border-radius:10px;padding:16px}
-  </style>
+<title>Java Midterm Practice</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #000;
+    color: #fff;
+}
+.question {
+    margin-bottom: 20px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+button:hover {
+    background-color: #3e8e41;
+}
+#results {
+    margin-top: 20px;
+    font-weight: bold;
+}
+</style>
 </head>
 <body>
-<div class="container">
-  <h1>Introduction to Java — 40-item Quiz</h1>
-  <p>Midterm multiple-choice quiz based on the Introduction to Java topic. Answer all items then click Submit.</p>
-  <div class="card">
-    <div style="margin-bottom:16px">
-      <button id="submit">Submit</button>
-      <button id="reset" class="ghost">Reset</button>
-      <button id="toggleKey" class="ghost">Toggle Answer Key</button>
-    </div>
-    <form id="quiz"></form>
-    <div id="result"></div>
-    <div id="answerKey"></div>
-  </div>
+
+<h1>Java Midterm Practice</h1>
+
+<div id="quiz">
+    <!-- Questions will be inserted here -->
 </div>
+
+<button onclick="submitQuiz()">Submit Quiz</button>
+
+<div id="results"></div>
+
 <script>
-const quiz=[
-{q:'Who developed Java programming language?',c:['Dennis Ritchie','James Gosling','Guido van Rossum','Bjarne Stroustrup'],a:1},
-{q:'In which year was Java officially released?',c:['1991','1995','2000','1989'],a:1},
-{q:'Which company originally owned Java?',c:['Microsoft','Sun Microsystems','Oracle','IBM'],a:1},
-{q:'Java was initially called _______.',c:['CoffeeLang','GreenTalk','Oak','Latte'],a:2},
-{q:'What symbol is used to end a statement in Java?',c:['.',';',':',','],a:1},
-{q:'Java was designed for what type of device before becoming a general-purpose language?',c:['Desktop computers','Televisions','Embedded systems','Mobile phones'],a:2},
-{q:'Which of the following best describes Java?',c:['Low-level language','High-level, object-oriented language','Assembly language','Machine language'],a:1},
-{q:'Java programs are compiled into ______.',c:['Binary files','Bytecode','Assembly code','Machine code'],a:1},
-{q:'The philosophy “Write Once, Run Anywhere” refers to ______.',c:['Portability','Security','Simplicity','Speed'],a:0},
-{q:'What does JVM stand for?',c:['Java Variable Machine','Java Virtual Machine','Java Verified Module','Java Version Manager'],a:1},
-{q:'Which of the following is NOT a Java edition?',c:['Java SE','Java EE','Java ME','Java XE'],a:3},
-{q:'Which component provides libraries and tools for developers?',c:['JVM','JDK','JRE','JAR'],a:1},
-{q:'The JRE contains ______.',c:['Compiler and debugger','Java compiler only','JVM and class libraries','Only the JVM'],a:2},
-{q:'Which of these compiles Java source code into bytecode?',c:['javac','java','jar','javadoc'],a:0},
-{q:'The file extension for a Java source file is ______.',c:['.jav','.java','.class','.jar'],a:1},
-{q:'The file extension for compiled Java bytecode is ______.',c:['.jav','.java','.class','.exe'],a:2},
-{q:'Which of the following runs Java bytecode?',c:['JVM','JRE','JDK','Compiler'],a:0},
-{q:'Java is considered platform-independent because ______.',c:['It uses machine code','Bytecode runs on JVM across OS','It’s written in C','It doesn’t require compilation'],a:1},
-{q:'What is the entry point of every Java program?',c:['main() method','start() method','init() method','begin() method'],a:0},
-{q:'Which keyword defines a class in Java?',c:['define','function','class','object'],a:2},
-{q:'Which of the following is NOT a Java feature?',c:['Object-oriented','Portable','Low-security','Robust'],a:2},
-{q:'Which statement displays output in Java?',c:['echo','System.out.print()','printf()','cout'],a:1},
-{q:'Java source files are first translated into ______.',c:['Assembly','Bytecode','Machine code','Binary'],a:1},
-{q:'Which part of Java ensures automatic memory management?',c:['JDK','Garbage Collector','Compiler','Interpreter'],a:1},
-{q:'Which company now owns Java?',c:['Google','Microsoft','Oracle','IBM'],a:2},
-{q:'What is the correct syntax to print “Hello World”?',c:['print("Hello World");','System.out.println("Hello World");','echo("Hello World");','printf("Hello World");'],a:1},
-{q:'Which data type is used to store whole numbers in Java?',c:['int','float','boolean','String'],a:0},
-{q:'In Java, a class name should start with ______.',c:['a lowercase letter','an uppercase letter','a digit','a symbol'],a:1},
-{q:'What does JDK stand for?',c:['Java Development Kit','Java Design Kernel','Java Desktop Kit','Java Dynamic Key'],a:0},
-{q:'Which of the following is a Java keyword?',c:['program','new','print','main'],a:1},
-{q:'Which statement is true about Java?',c:['It’s compiled and interpreted','It’s only interpreted','It’s only compiled','It’s not compiled'],a:0},
-{q:'Which of these helps run Java programs on any OS?',c:['API','IDE','JVM','SDK'],a:2},
-{q:'The first step in running a Java program is to ______.',c:['Run the JVM','Compile source code using javac','Write bytecode','Run JAR file'],a:1},
-{q:'Which of these is used to group classes in Java?',c:['Packages','Modules','Namespaces','Groups'],a:0},
-{q:'Java comments start with which symbols?',c:['#','# #','//','--'],a:2},
-{q:'The method System.out.println() belongs to which class?',c:['System','Console','Main','Print'],a:0},
-{q:'Which Java edition is used for developing mobile apps?',c:['Java SE','Java EE','Java ME','Java FX'],a:2},
-{q:'Which Java feature makes it secure?',c:['Pointer manipulation','Bytecode verification','Manual memory allocation','Hardware dependence'],a:1},
-{q:'Which tool is used to bundle Java classes into a single file?',c:['javac','jar','javadoc','javap'],a:1}
-];const quizEl=document.getElementById('quiz'); const resultEl=document.getElementById('result'); const answerKey=document.getElementById('answerKey');
+const questions = [
+    {
+        question: "Who is credited with creating Java?",
+        answers: {
+            a: "Bill Gates",
+            b: "James Gosling",
+            c: "Steve Jobs",
+            d: "Linus Torvalds"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What was Java's original name?",
+        answers: {
+            a: "Java",
+            b: "C++",
+            c: "Oak",
+            d: "Emerald"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "In what year was Java officially released?",
+        answers: {
+            a: "1991",
+            b: "1995",
+            c: "2000",
+            d: "2010"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which company acquired Sun Microsystems in 2010?",
+        answers: {
+            a: "Microsoft",
+            b: "IBM",
+            c: "Oracle",
+            d: "Google"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What was a primary motivation for creating Java?",
+        answers: {
+            a: "To replace COBOL",
+            b: "To create software for consumer electronic devices",
+            c: "To develop operating systems",
+            d: "To compete with C#"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is a key principle in Java's design?",
+        answers: {
+            a: "Complexity",
+            b: "Portability",
+            c: "Exclusivity",
+            d: "Obscurity"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What does 'WORA' stand for in the context of Java?",
+        answers: {
+            a: "Write Once, Read Anywhere",
+            b: "Write Once, Run Anywhere",
+            c: "Write Only, Run Always",
+            d: "Write Often, Run Anywhere"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which of the following is NOT a key feature of Java?",
+        answers: {
+            a: "Platform Independent",
+            b: "Object-Oriented",
+            c: "Direct Memory Access",
+            d: "Multithreaded"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "Which component contains tools to compile and debug Java programs?",
+        answers: {
+            a: "JRE",
+            b: "JVM",
+            c: "JDK",
+            d: "API"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is the role of the Java Virtual Machine (JVM)?",
+        answers: {
+            a: "To write Java code",
+            b: "To compile Java code",
+            c: "To execute Java bytecode",
+            d: "To manage hardware resources"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "Which Java Edition is used for enterprise-level applications?",
+        answers: {
+            a: "Java SE",
+            b: "Java ME",
+            c: "Java EE",
+            d: "Java FX"
+        },
+        correctAnswer: "c"
+    },
+     {
+        question: "Which Java Edition is designed for mobile phones and embedded systems?",
+        answers: {
+            a: "Java SE",
+            b: "Java ME",
+            c: "Java EE",
+            d: "Java FX"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which of the following is a Java framework?",
+        answers: {
+            a: ".NET",
+            b: "Spring",
+            c: "Ruby on Rails",
+            d: "Angular"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is the entry point of every Java program?",
+        answers: {
+            a: "class",
+            b: "System.out.println",
+            c: "main method",
+            d: "import statement"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What does `System.out.println()` do in Java?",
+        answers: {
+            a: "Reads input from the keyboard",
+            b: "Prints text to the screen",
+            c: "Declares a variable",
+            d: "Defines a class"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What makes Java platform-independent?",
+        answers: {
+            a: "Its syntax",
+            b: "The JVM",
+            c: "Its object-oriented nature",
+            d: "Its multithreading capabilities"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which feature of Java helps in performing multiple tasks simultaneously?",
+        answers: {
+            a: "Portability",
+            b: "Security",
+            c: "Multithreading",
+            d: "Object-orientation"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "Which of the following is NOT a design goal of Java?",
+        answers: {
+            a: "Simple and familiar",
+            b: "Object-oriented",
+            c: "Secure",
+            d: "Complex and intricate"
+        },
+        correctAnswer: "d"
+    },
+    {
+        question: "What does the JDK contain?",
+        answers: {
+            a: "Only the JVM",
+            b: "Only the JRE",
+            c: "Compiler, libraries, and JRE",
+            d: "Only standard class libraries"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is the primary function of the JRE?",
+        answers: {
+            a: "To develop Java programs",
+            b: "To compile Java programs",
+            c: "To run Java applications",
+            d: "To debug Java programs"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is bytecode in Java?",
+        answers: {
+            a: "Machine code",
+            b: "Source code",
+            c: "An intermediate representation of Java code",
+            d: "Assembly code"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "Which edition of Java is suitable for developing desktop applications?",
+        answers: {
+            a: "Java SE",
+            b: "Java ME",
+            c: "Java EE",
+            d: "All of the above"
+        },
+        correctAnswer: "a"
+    },
+    {
+        question: "Which of the following is NOT a valid Java edition?",
+        answers: {
+            a: "Java SE",
+            b: "Java ME",
+            c: "Java EE",
+            d: "Java XE"
+        },
+        correctAnswer: "d"
+    },
+    {
+        question: "What is the significance of Java being object-oriented?",
+        answers: {
+            a: "It makes the code faster.",
+            b: "It makes the code more secure.",
+            c: "It allows for modular and reusable code.",
+            d: "It allows direct memory access."
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "How does Java handle memory management?",
+        answers: {
+            a: "Manually by the programmer",
+            b: "Automatically through garbage collection",
+            c: "Through direct memory access",
+            d: "By allocating a fixed amount of memory at the start"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is the role of the `javac` command?",
+        answers: {
+            a: "To run Java programs",
+            b: "To compile Java source code",
+            c: "To debug Java programs",
+            d: "To create Java packages"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which feature helps Java prevent harmful operations?",
+        answers: {
+            a: "Its object-oriented nature",
+            b: "Its portability",
+            c: "Its security features",
+            d: "Its multithreading capabilities"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What type of applications commonly use Java EE?",
+        answers: {
+            a: "Mobile applications",
+            b: "Desktop applications",
+            c: "Enterprise-level applications",
+            d: "Embedded systems"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "Which technology is commonly used for developing Android applications?",
+        answers: {
+            a: "C++",
+            b: "Java",
+            c: "Python",
+            d: "Swift"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What does the `public static void` declaration signify in the main method?",
+        answers: {
+            a: "The method is private and cannot be accessed.",
+            b: "The method is the entry point of the program and can be accessed from anywhere.",
+            c: "The method returns a value.",
+            d: "The method is abstract and must be implemented."
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which of the following is a characteristic of robust code?",
+        answers: {
+            a: "High complexity",
+            b: "Efficient error handling",
+            c: "Low security",
+            d: "Limited portability"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is the advantage of using Just-In-Time (JIT) compilation in Java?",
+        answers: {
+            a: "It reduces security vulnerabilities.",
+            b: "It improves performance.",
+            c: "It simplifies the code.",
+            d: "It enhances portability."
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which of the following is a valid comment in Java?",
+        answers: {
+            a: "// This is a comment",
+            b: "/* This is a comment */",
+            c: "Both a and b",
+            d: "# This is a comment"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is the purpose of the `import` statement in Java?",
+        answers: {
+            a: "To define a new class",
+            b: "To include external libraries",
+            c: "To declare variables",
+            d: "To create objects"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is the function of the Java compiler?",
+        answers: {
+            a: "To execute Java code directly",
+            b: "To convert Java source code into bytecode",
+            c: "To manage memory allocation",
+            d: "To provide a graphical user interface"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which of the following is a valid class declaration in Java?",
+        answers: {
+            a: "class MyClass()",
+            b: "class MyClass {}",
+            c: "Class MyClass",
+            d: "class = MyClass"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is the default value of an uninitialized integer variable in Java?",
+        answers: {
+            a: "1",
+            b: "-1",
+            c: "0",
+            d: "Null"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "Which operator is used for assignment in Java?",
+        answers: {
+            a: "==",
+            b: "=",
+            c: ":=",
+            d: "->"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is the purpose of the `new` keyword in Java?",
+        answers: {
+            a: "To declare a variable",
+            b: "To create an object",
+            c: "To define a method",
+            d: "To include a library"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which of the following data types is used to store text in Java?",
+        answers: {
+            a: "int",
+            b: "float",
+            c: "String",
+            d: "boolean"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is the role of the garbage collector in Java?",
+        answers: {
+            a: "To allocate memory",
+            b: "To free up unused memory",
+            c: "To manage network connections",
+            d: "To optimize code execution"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which of the following access modifiers provides the most restrictive access?",
+        answers: {
+            a: "public",
+            b: "protected",
+            c: "private",
+            d: "default (package-private)"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is inheritance in Java?",
+        answers: {
+            a: "Creating new objects",
+            b: "Deriving new classes from existing classes",
+            c: "Deleting existing classes",
+            d: "Importing libraries"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which keyword is used to implement inheritance in Java?",
+        answers: {
+            a: "import",
+            b: "class",
+            c: "extends",
+            d: "implements"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is polymorphism in Java?",
+        answers: {
+            a: "The ability of an object to take on many forms",
+            b: "The process of compiling code",
+            c: "The act of importing libraries",
+            d: "The creation of new objects"
+        },
+        correctAnswer: "a"
+    },
+    {
+        question: "What is an interface in Java?",
+        answers: {
+            a: "A class with only public methods",
+            b: "A blueprint of a class",
+            c: "A class that can only be extended",
+            d: "A collection of related classes"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which keyword is used to define an interface in Java?",
+        answers: {
+            a: "class",
+            b: "extends",
+            c: "interface",
+            d: "implements"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "What is the purpose of exception handling in Java?",
+        answers: {
+            a: "To prevent errors from occurring",
+            b: "To handle errors gracefully during runtime",
+            c: "To optimize code performance",
+            d: "To allocate memory"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "Which block is used to catch exceptions in Java?",
+        answers: {
+            a: "try",
+            b: "catch",
+            c: "finally",
+            d: "throw"
+        },
+        correctAnswer: "b"
+    },
+    {
+        question: "What is the purpose of the `finally` block in exception handling?",
+        answers: {
+            a: "To execute code if an exception occurs",
+            b: "To define the exception type",
+            c: "To execute code regardless of whether an exception occurs",
+            d: "To throw an exception"
+        },
+        correctAnswer: "c"
+    }
+];
 
-quiz.forEach((q,i)=>{ const div=document.createElement('div'); div.className='question'; div.innerHTML=<h3>${i+1}. ${q.q}</h3>+ q.c.map((c,idx)=><label><input type="radio" name="q${i}" value="${idx}">${String.fromCharCode(65+idx)}. ${c}</label>).join(''); quizEl.appendChild(div); });
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
-document.getElementById('submit').onclick=e=>{ e.preventDefault(); const data=new FormData(quizEl); let score=0; document.querySelectorAll('.question').forEach((el,i)=>{ const ans=data.get('q'+i); el.classList.remove('correct','wrong'); if(ans!==null && Number(ans)===quiz[i].a){score++;el.classList.add('correct');} else el.classList.add('wrong'); }); const pct=Math.round(score/quiz.length*100); resultEl.style.display='block'; resultEl.innerHTML=<strong>Score:</strong> ${score}/40 (${pct}%) — ${pct>=75?'Passed 🎉':'Needs Review'}; answerKey.innerHTML='<h3>Answer Key</h3>'+quiz.map((q,i)=><p><strong>${i+1}.</strong> ${String.fromCharCode(65+q.a)} - ${q.c[q.a]}</p>).join(''); };
+function buildQuiz() {
+    shuffleArray(questions); // Shuffle questions
 
-document.getElementById('reset').onclick=e=>{e.preventDefault();quizEl.reset();document.querySelectorAll('.question').forEach(q=>q.classList.remove('correct','wrong'));resultEl.style.display='none';answerKey.style.display='none';}; document.getElementById('toggleKey').onclick=e=>{e.preventDefault();answerKey.style.display=answerKey.style.display==='block'?'none':'block';}; </script>
+    const quizContainer = document.getElementById("quiz");
+    let output = [];
+
+    questions.forEach((question, questionNumber) => {
+        let answers = [];
+
+        for (letter in question.answers) {
+            answers.push(
+                `<label>
+                    <input type="radio" name="question${questionNumber}" value="${letter}">
+                    ${letter}: ${question.answers[letter]}
+                </label>`
+            );
+        }
+
+        output.push(
+            `<div class="question">
+                <b>${questionNumber + 1}.</b> ${question.question}
+                <div class="answers">
+                    ${answers.join("")}
+                </div>
+            </div>`
+        );
+    });
+
+    quizContainer.innerHTML = output.join("");
+}
+
+function submitQuiz() {
+    const quizContainer = document.getElementById("quiz");
+    const resultsContainer = document.getElementById("results");
+    let numCorrect = 0;
+
+    questions.forEach((question, questionNumber) => {
+        const selector = `input[name=question${questionNumber}]:checked`;
+        const userAnswer = (document.querySelector(selector) || {}).value;
+
+        if (userAnswer === question.correctAnswer) {
+            numCorrect++;
+        }
+    });
+
+    resultsContainer.innerHTML = `You got ${numCorrect} out of ${questions.length} questions correct.`;
+}
+
+buildQuiz();
+</script>
 
 </body>
 </html>
