@@ -1,396 +1,218 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computing Quiz</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0; /* Remove default body margins */
-            background-color: #000; /* Black background */
-            color: #fff; /* White text */
-            overflow: hidden; /* Prevent body scroll */
-        }
-
-        #quiz-container {
-            position: absolute; /* Absolute positioning for scrolling */
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            bottom: 80px; /* Leave space for the button */
-            overflow-y: auto; /* Enable vertical scrolling within the container */
-            padding: 20px;
-        }
-
-        .question {
-            margin-bottom: 20px;
-        }
-
-        .options {
-            list-style: none;
-            padding: 0;
-        }
-
-        .options li {
-            margin-bottom: 10px;
-        }
-
-        .correct {
-            color: green;
-        }
-
-        .incorrect {
-            color: red;
-            display: none; /* Initially hide incorrect feedback */
-        }
-
-        button {
-            position: fixed; /* Fixed position at the bottom */
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%); /* Center the button */
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #4CAF50; /* Green button */
-            color: white;
-            border: none;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background-color: #367c39; /* Darker green on hover */
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Introduction to Computing — Multiple Choice Quiz</title>
+  <style>
+    :root{
+      --bg:#0b0b0c; --card:#0f1720; --muted:#9aa4b2; --accent:#60a5fa; --correct:#16a34a; --wrong:#ef4444; --glass: rgba(255,255,255,0.03);
+      --radius:14px; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,#020202 0%, #0b1220 100%);color:#e6eef8}
+    .container{max-width:1000px;margin:32px auto;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6)}
+    header{display:flex;gap:16px;align-items:center;justify-content:space-between}
+    h1{margin:0;font-size:1.4rem}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    button, .toggle{background:var(--glass);border:1px solid rgba(255,255,255,0.04);color:inherit;padding:8px 12px;border-radius:10px;cursor:pointer}
+    button:hover{transform:translateY(-1px)}
+    .quiz{margin-top:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));padding:14px;border-radius:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.02)}
+    .q{display:flex;gap:12px;align-items:flex-start}
+    .qnum{min-width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,0.02);display:flex;align-items:center;justify-content:center;color:var(--muted);font-weight:600}
+    .qtext{flex:1}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+    label.option{display:flex;gap:10px;align-items:center;padding:8px;border-radius:10px;background:rgba(255,255,255,0.01);cursor:pointer;border:1px solid rgba(255,255,255,0.02)}
+    input[type=radio]{accent-color:var(--accent)}
+    .foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+    .result{font-weight:700}
+    .answer-key{margin-top:14px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.03);color:var(--muted);display:none}
+    .qa-correct{border-left:4px solid var(--correct);padding-left:10px}
+    .qa-wrong{border-left:4px solid var(--wrong);padding-left:10px}
+    .small{font-size:0.9rem;color:var(--muted)}
+    .download-link{display:inline-block;margin-left:8px}
+    @media (max-width:720px){.options{grid-template-columns:1fr} .container{margin:12px}}
+  </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Introduction to Computing — Multiple Choice Quiz</h1>
+        <p class="lead">50+ MCQs. Choose an answer for each question. Use the controls to submit, reveal the answer key, or download the page.</p>
+      </div>
+      <div class="controls">
+        <button id="checkBtn">Check Answers & Score</button>
+        <button id="revealBtn">Show Answer Key</button>
+        <button id="resetBtn">Reset</button>
+        <button id="printBtn">Print</button>
+        <button id="downloadBtn">Download HTML</button>
+      </div>
+    </header><main class="quiz" id="quiz">
+  <!-- Questions will be injected by script -->
+</main>
 
-    <h1>Introduction to Computing Quiz</h1>
+<div class="foot">
+  <div class="small">Tip: you can reveal answers without scoring if you want to study.</div>
+  <div class="result" id="score"></div>
+</div>
 
-    <div id="quiz-container">
-        </div>
+<section class="answer-key" id="answerKey" aria-hidden="true">
+  <!-- Answer key injected here -->
+</section>
 
-    <button onclick="submitQuiz()">Submit Quiz</button>
+  </div>  <script>
+    const questions = [
+      {q: "Which of the following is NOT a key component of a computer?", opts:["Hardware","Software","Network","Operating System"], a:3},
+      {q: "Which ancient device is considered the earliest known analog computer?", opts:["Abacus","Antikythera Mechanism","Napier's Bones","Pascaline"], a:1},
+      {q: "Who invented Napier's Bones?", opts:["Pascal","Leibniz","John Napier","Charles Babbage"], a:2},
+      {q: "The Pascaline was invented by whom?", opts:["John Napier","Blaise Pascal","Gottfried Wilhelm Leibniz","Charles Babbage"], a:1},
+      {q: "Who improved Pascal's design to create the Stepped Reckoner, which could perform multiplication and division?", opts:["Blaise Pascal","John Napier","Gottfried Wilhelm Leibniz","Charles Babbage"], a:2},
+      {q: "Who is known as the \"Father of the Computer\"?", opts:["Alan Turing","Gottfried Wilhelm Leibniz","Charles Babbage","John von Neumann"], a:2},
+      {q: "Which machine designed by Charles Babbage introduced the concepts of memory, input, output, and a central processing unit (CPU)?", opts:["Difference Engine","Analytical Engine","Pascaline","Stepped Reckoner"], a:1},
+      {q: "Who is considered the first computer programmer?", opts:["Alan Turing","Ada Lovelace","Grace Hopper","John von Neumann"], a:1},
+      {q: "Herman Hollerith's tabulating machine was used to process data from which U.S. Census?", opts:["1880","1890","1900","1910"], a:1},
+      {q: "Where did Alan Turing work during World War II, contributing to the decoding of German encrypted messages (Enigma)?", opts:["The Pentagon","Bell Labs","Bletchley Park","MIT"], a:2},
+      {q: "When was the ENIAC developed?", opts:["1940","1945","1951","1960"], a:1},
+      {q: "Which computer was known for accurately predicting the outcome of the 1952 U.S. Presidential election?", opts:["ENIAC","UNIVAC","Colossus","Analytical Engine"], a:1},
+      {q: "Who proposed the von Neumann architecture?", opts:["Alan Turing","John von Neumann","John Presper Eckert","John Mauchly"], a:1},
+      {q: "The von Neumann architecture includes which key components?", opts:["CPU, Memory, Input, Output","Transistors, Integrated Circuits, Microprocessors","Vacuum Tubes, Relays, Switches","Hard Drives, SSDs, Flash Memory"], a:0},
+      {q: "What is Moore's Law?", opts:["The speed of computers doubles every year.","The number of transistors on a microchip doubles approximately every two years.","The cost of computing halves every year.","The size of computers halves every year."], a:1},
+      {q: "Which generation of computers used vacuum tubes?", opts:["First Generation","Second Generation","Third Generation","Fourth Generation"], a:0},
+      {q: "Transistors were a key component of which generation of computers?", opts:["First Generation","Second Generation","Third Generation","Fourth Generation"], a:1},
+      {q: "Integrated circuits were introduced in which generation of computers?", opts:["First Generation","Second Generation","Third Generation","Fourth Generation"], a:2},
+      {q: "Microprocessors are associated with which generation of computers?", opts:["First Generation","Second Generation","Third Generation","Fourth Generation"], a:3},
+      {q: "What is the primary function of an operating system (OS)?", opts:["To run specific applications.","To manage hardware and software resources.","To browse the internet.","To create documents."], a:1},
+      {q: "Which of the following is an example of an operating system?", opts:["Microsoft Office","Google Chrome","Windows","Adobe Photoshop"], a:2},
+      {q: "What is the role of the CPU (Central Processing Unit)?", opts:["Storing data","Executing instructions","Displaying images","Connecting to the internet"], a:1},
+      {q: "What does RAM stand for?", opts:["Readily Available Memory","Random Access Memory","Read Access Memory","Rapid Application Memory"], a:1},
+      {q: "Which type of memory is volatile?", opts:["Hard Drive","SSD","RAM","ROM"], a:2},
+      {q: "What is the purpose of ROM (Read-Only Memory)?", opts:["Storing temporary data","Storing the operating system","Storing permanent instructions","Running applications"], a:2},
+      {q: "Which storage device uses magnetic platters to store data?", opts:["SSD","Flash Drive","Hard Drive","RAM"], a:2},
+      {q: "What does SSD stand for?", opts:["Solid State Drive","Simple Storage Device","Serial State Drive","Solid Serial Disk"], a:0},
+      {q: "Which input device is used to enter text and commands into a computer?", opts:["Mouse","Keyboard","Scanner","Microphone"], a:1},
+      {q: "Which output device displays visual information?", opts:["Printer","Speaker","Monitor","Plotter"], a:2},
+      {q: "What is the function of a network interface card (NIC)?", opts:["To display images","To connect a computer to a network","To store data","To process instructions"], a:1},
+      {q: "What is the internet?", opts:["A single network","A collection of interconnected networks","A type of software","A hardware device"], a:1},
+      {q: "What does URL stand for?", opts:["Uniform Resource Locator","Universal Resource Locator","Unified Resource Locator","Unit Resource Locator"], a:0},
+      {q: "What is the purpose of a web browser?", opts:["To create websites","To view websites","To manage files","To send emails"], a:1},
+      {q: "Which of the following is a web browser?", opts:["Microsoft Word","Excel","Google Chrome","PowerPoint"], a:2},
+      {q: "What is an IP address?", opts:["A physical address","A logical address for identifying devices on a network","A type of software","A hardware component"], a:1},
+      {q: "What does LAN stand for?", opts:["Large Area Network","Local Area Network","Long Area Network","Limited Area Network"], a:1},
+      {q: "What is the purpose of a router?", opts:["To display images","To connect multiple networks","To store data","To process instructions"], a:1},
+      {q: "What is Wi-Fi?", opts:["A wired network technology","A wireless network technology","A type of software","A hardware component"], a:1},
+      {q: "What is Bluetooth?", opts:["A long-range wireless communication technology","A short-range wireless communication technology","A type of software","A hardware component"], a:1},
+      {q: "What is a computer program?", opts:["A set of instructions for a computer to execute","A hardware device","An operating system","A type of network"], a:0},
+      {q: "What is an algorithm?", opts:["A computer program","A step-by-step procedure for solving a problem","A hardware device","An operating system"], a:1},
+      {q: "Which of the following is a programming language?", opts:["Microsoft Word","Excel","Java","PowerPoint"], a:2},
+      {q: "What is the purpose of a compiler?", opts:["To run programs","To translate source code into machine code","To create documents","To browse the internet"], a:1},
+      {q: "What is the purpose of debugging?", opts:["To write code","To find and fix errors in code","To run programs","To translate code"], a:1},
+      {q: "What is software?", opts:["The physical components of a computer","A set of instructions that tells a computer what to do","The operating system","The network connection"], a:1},
+      {q: "Which of the following is an example of application software?", opts:["Windows","macOS","Microsoft Office","Linux"], a:2},
+      {q: "What is system software?", opts:["Software designed for specific tasks","Software that manages hardware resources","Software used for browsing the internet","Software used for creating documents"], a:1},
+      {q: "What is malware?", opts:["A type of hardware","Malicious software designed to harm a computer system","A type of network","A computer program"], a:1},
+      {q: "What is a computer virus?", opts:["A type of hardware","A type of malware that replicates itself","A type of network","A computer program"], a:1},
+      {q: "What is the purpose of a firewall?", opts:["To speed up a computer","To protect a computer from unauthorized access","To store data","To display images"], a:1}
+    ];
 
-    <script>
-        const quizData = [
-            {
-                question: "Which of the following is NOT a key component of a computer?",
-                options: ["Hardware", "Software", "Network", "Operating System"],
-                correctAnswer: "Operating System"
-            },
-            {
-                question: "Which ancient device is considered the earliest known analog computer?",
-                options: ["Abacus", "Antikythera Mechanism", "Napier's Bones", "Pascaline"],
-                correctAnswer: "Antikythera Mechanism"
-            },
-            {
-                question: "Who invented Napier's Bones?",
-                options: ["Pascal", "Leibniz", "John Napier", "Charles Babbage"],
-                correctAnswer: "John Napier"
-            },
-            {
-                question: "The Pascaline was invented by whom?",
-                options: ["John Napier", "Blaise Pascal", "Gottfried Wilhelm Leibniz", "Charles Babbage"],
-                correctAnswer: "Blaise Pascal"
-            },
-            {
-                question: "Who improved Pascal's design to create the Stepped Reckoner, which could perform multiplication and division?",
-                options: ["Blaise Pascal", "John Napier", "Gottfried Wilhelm Leibniz", "Charles Babbage"],
-                correctAnswer: "Gottfried Wilhelm Leibniz"
-            },
-            {
-                question: "Who is known as the 'Father of the Computer'?",
-                options: ["Alan Turing", "Gottfried Wilhelm Leibniz", "Charles Babbage", "John von Neumann"],
-                correctAnswer: "Charles Babbage"
-            },
-            {
-                question: "Which machine designed by Charles Babbage introduced the concepts of memory, input, output, and a central processing unit (CPU)?",
-                options: ["Difference Engine", "Analytical Engine", "Pascaline", "Stepped Reckoner"],
-                correctAnswer: "Analytical Engine"
-            },
-            {
-                question: "Who is considered the first computer programmer?",
-                options: ["Alan Turing", "Ada Lovelace", "Grace Hopper", "John von Neumann"],
-                correctAnswer: "Ada Lovelace"
-            },
-            {
-                question: "Herman Hollerith's tabulating machine was used to process data from which U.S. Census?",
-                options: ["1880", "1890", "1900", "1910"],
-                correctAnswer: "1890"
-            },
-            {
-                question: "Where did Alan Turing work during World War II, contributing to the decoding of German encrypted messages (Enigma)?",
-                options: ["The Pentagon", "Bell Labs", "Bletchley Park", "MIT"],
-                correctAnswer: "Bletchley Park"
-            },
-            {
-                question: "When was the ENIAC developed?",
-                options: ["1940", "1945", "1951", "1960"],
-                correctAnswer: "1945"
-            },
-            {
-                question: "Which computer was known for accurately predicting the outcome of the 1952 U.S. Presidential election?",
-                options: ["ENIAC", "UNIVAC", "Colossus", "Analytical Engine"],
-                correctAnswer: "UNIVAC"
-            },
-             {
-                question: "Who proposed the von Neumann architecture?",
-                options: ["Alan Turing", "John von Neumann", "John Presper Eckert", "John Mauchly"],
-                correctAnswer: "John von Neumann"
-            },
-            {
-                question: "The von Neumann architecture includes which key components?",
-                options: ["CPU, Memory, Input, Output", "Transistors, Integrated Circuits, Microprocessors", "Vacuum Tubes, Relays, Switches", "Hard Drives, SSDs, Flash Memory"],
-                correctAnswer: "CPU, Memory, Input, Output"
-            },
-            {
-                question: "What is Moore's Law?",
-                options: ["The speed of computers doubles every year.", "The number of transistors on a microchip doubles approximately every two years.", "The cost of computing halves every year.", "The size of computers halves every year."],
-                correctAnswer: "The number of transistors on a microchip doubles approximately every two years."
-            },
-            {
-                question: "Which generation of computers used vacuum tubes?",
-                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
-                correctAnswer: "First Generation"
-            },
-            {
-                question: "Transistors were a key component of which generation of computers?",
-                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
-                correctAnswer: "Second Generation"
-            },
-            {
-                question: "Integrated circuits were introduced in which generation of computers?",
-                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
-                correctAnswer: "Third Generation"
-            },
-            {
-                question: "Microprocessors are associated with which generation of computers?",
-                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
-                correctAnswer: "Fourth Generation"
-            },
-            {
-                question: "What is the primary function of an operating system (OS)?",
-                options: ["To run specific applications.", "To manage hardware and software resources.", "To browse the internet.", "To create documents."],
-                correctAnswer: "To manage hardware and software resources."
-            },
-            {
-                question: "Which of the following is an example of an operating system?",
-                options: ["Microsoft Office", "Google Chrome", "Windows", "Adobe Photoshop"],
-                correctAnswer: "Windows"
-            },
-            {
-                question: "What is the role of the CPU (Central Processing Unit)?",
-                options: ["Storing data", "Executing instructions", "Displaying images", "Connecting to the internet"],
-                correctAnswer: "Executing instructions"
-            },
-            {
-                question: "What does RAM stand for?",
-                options: ["Readily Available Memory", "Random Access Memory", "Read Access Memory", "Rapid Application Memory"],
-                correctAnswer: "Random Access Memory"
-            },
-            {
-                question: "Which type of memory is volatile?",
-                options: ["Hard Drive", "SSD", "RAM", "ROM"],
-                correctAnswer: "RAM"
-            },
-            {
-                question: "What is the purpose of ROM (Read-Only Memory)?",
-                options: ["Storing temporary data", "Storing the operating system", "Storing permanent instructions", "Running applications"],
-                correctAnswer: "Storing permanent instructions"
-            },
-            {
-                question: "Which storage device uses magnetic platters to store data?",
-                options: ["SSD", "Flash Drive", "Hard Drive", "RAM"],
-                correctAnswer: "Hard Drive"
-            },
-            {
-                question: "What does SSD stand for?",
-                options: ["Solid State Drive", "Simple Storage Device", "Serial State Drive", "Solid Serial Disk"],
-                correctAnswer: "Solid State Drive"
-            },
-            {
-                question: "Which input device is used to enter text and commands into a computer?",
-                options: ["Mouse", "Keyboard", "Scanner", "Microphone"],
-                correctAnswer: "Keyboard"
-            },
-            {
-                question: "Which output device displays visual information?",
-                options: ["Printer", "Speaker", "Monitor", "Plotter"],
-                correctAnswer: "Monitor"
-            },
-            {
-                question: "What is the function of a network interface card (NIC)?",
-                options: ["To display images", "To connect a computer to a network", "To store data", "To process instructions"],
-                correctAnswer: "To connect a computer to a network"
-            },
-            {
-                question: "What is the internet?",
-                options: ["A single network", "A collection of interconnected networks", "A type of software", "A hardware device"],
-                correctAnswer: "A collection of interconnected networks"
-            },
-            {
-                question: "What does URL stand for?",
-                options: ["Uniform Resource Locator", "Universal Resource Locator", "Unified Resource Locator", "Unit Resource Locator"],
-                correctAnswer: "Uniform Resource Locator"
-            },
-            {
-                question: "What is the purpose of a web browser?",
-                options: ["To create websites", "To view websites", "To manage files", "To send emails"],
-                correctAnswer: "To view websites"
-            },
-            {
-                question: "Which of the following is a web browser?",
-                options: ["Microsoft Word", "Excel", "Google Chrome", "PowerPoint"],
-                correctAnswer: "Google Chrome"
-            },
-            {
-                question: "What is an IP address?",
-                options: ["A physical address", "A logical address for identifying devices on a network", "A type of software", "A hardware component"],
-                correctAnswer: "A logical address for identifying devices on a network"
-            },
-            {
-                question: "What does LAN stand for?",
-                options: ["Large Area Network", "Local Area Network", "Long Area Network", "Limited Area Network"],
-                correctAnswer: "Local Area Network"
-            },
-            {
-                question: "What is the purpose of a router?",
-                options: ["To display images", "To connect multiple networks", "To store data", "To process instructions"],
-                correctAnswer: "To connect multiple networks"
-            },
-            {
-                question: "What is Wi-Fi?",
-                options: ["A wired network technology", "A wireless network technology", "A type of software", "A hardware component"],
-                correctAnswer: "A wireless network technology"
-            },
-            {
-                question: "What is Bluetooth?",
-                options: ["A long-range wireless communication technology", "A short-range wireless communication technology", "A type of software", "A hardware component"],
-                correctAnswer: "A short-range wireless communication technology"
-            },
-            {
-                question: "What is a computer program?",
-                options: ["A set of instructions for a computer to execute", "A hardware device", "An operating system", "A type of network"],
-                correctAnswer: "A set of instructions for a computer to execute"
-            },
-            {
-                question: "What is an algorithm?",
-                options: ["A computer program", "A step-by-step procedure for solving a problem", "A hardware device", "An operating system"],
-                correctAnswer: "A step-by-step procedure for solving a problem"
-            },
-            {
-                question: "Which of the following is a programming language?",
-                options: ["Microsoft Word", "Excel", "Java", "PowerPoint"],
-                correctAnswer: "Java"
-            },
-            {
-                question: "What is the purpose of a compiler?",
-                options: ["To run programs", "To translate source code into machine code", "To create documents", "To browse the internet"],
-                correctAnswer: "To translate source code into machine code"
-            },
-            {
-                question: "What is the purpose of debugging?",
-                options: ["To write code", "To find and fix errors in code", "To run programs", "To translate code"],
-                correctAnswer: "To find and fix errors in code"
-            },
-            {
-                question: "What is software?",
-                options: ["The physical components of a computer", "A set of instructions that tells a computer what to do", "The operating system", "The network connection"],
-                correctAnswer: "A set of instructions that tells a computer what to do"
-            },
-            {
-                question: "Which of the following is an example of application software?",
-                options: ["Windows", "macOS", "Microsoft Office", "Linux"],
-                correctAnswer: "Microsoft Office"
-            },
-            {
-                question: "What is system software?",
-                options: ["Software designed for specific tasks", "Software that manages hardware resources", "Software used for browsing the internet", "Software used for creating documents"],
-                correctAnswer: "Software that manages hardware resources"
-            },
-            {
-                question: "What is malware?",
-                options: ["A type of hardware", "Malicious software designed to harm a computer system", "A type of network", "A computer program"],
-                correctAnswer: "Malicious software designed to harm a computer system"
-            },
-            {
-                question: "What is a computer virus?",
-                options: ["A type of hardware", "A type of malware that replicates itself", "A type of network", "A computer program"],
-                correctAnswer: "A type of malware that replicates itself"
-            },
-            {
-                question: "What is the purpose of a firewall?",
-                options: ["To speed up a computer", "To protect a computer from unauthorized access", "To store data", "To display images"],
-                correctAnswer: "To protect a computer from unauthorized access"
-            }        ];
+    const quizEl = document.getElementById('quiz');
+    const answerKeyEl = document.getElementById('answerKey');
 
-        const quizContainer = document.getElementById("quiz-container");
-        let currentQuestion = 0;
-        let score = 0;
+    function render(){
+      quizEl.innerHTML = '';
+      answerKeyEl.innerHTML = '';
+      questions.forEach((item,i)=>{
+        const card = document.createElement('article'); card.className = 'card';
+        const qwrap = document.createElement('div'); qwrap.className='q';
+        const qnum = document.createElement('div'); qnum.className='qnum'; qnum.textContent = i+1;
+        const qtext = document.createElement('div'); qtext.className='qtext';
+        const title = document.createElement('div'); title.innerHTML = '<strong>'+item.q+'</strong>';
+        qtext.appendChild(title);
+        const opts = document.createElement('div'); opts.className='options';
+        item.opts.forEach((o,idx)=>{
+          const id = 'q'+i+'o'+idx;
+          const label = document.createElement('label'); label.className='option'; label.setAttribute('for', id);
+          const input = document.createElement('input'); input.type='radio'; input.name='q'+i; input.id=id; input.value=idx;
+          const span = document.createElement('span'); span.textContent = String.fromCharCode(65+idx)+') '+o;
+          label.appendChild(input); label.appendChild(span);
+          opts.appendChild(label);
+        });
+        qtext.appendChild(opts);
+        qwrap.appendChild(qnum); qwrap.appendChild(qtext);
+        card.appendChild(qwrap);
+        quizEl.appendChild(card);
 
-        function loadQuestion() {
-            const questionData = quizData[currentQuestion];
-            const questionElement = document.createElement("div");
-            questionElement.classList.add("question");
-            questionElement.innerHTML = `<p>${currentQuestion + 1}. ${questionData.question}</p>`;
+        // Answer key entry
+        const ak = document.createElement('div'); ak.className='small'; ak.textContent = (i+1)+'. ' + String.fromCharCode(65+item.a) + ' — ' + item.opts[item.a];
+        answerKeyEl.appendChild(ak);
+      });
+    }
 
-            const optionsList = document.createElement("ul");
-            optionsList.classList.add("options");
-
-            questionData.options.forEach(option => {
-                const listItem = document.createElement("li");
-                listItem.innerHTML = `
-                    <label>
-                        <input type="radio" name="question${currentQuestion}" value="${option}">
-                        ${option}
-                        <span class="incorrect">Incorrect</span>
-                    </label>
-                `;
-                optionsList.appendChild(listItem);
-            });
-
-            questionElement.appendChild(optionsList);
-            quizContainer.innerHTML = ""; // Clear previous question
-            quizContainer.appendChild(questionElement);
+    function checkAnswers(){
+      let correct = 0;
+      const cards = quizEl.querySelectorAll('.card');
+      cards.forEach((card, i)=>{
+        const chosen = card.querySelector('input[type=radio]:checked');
+        const qIndex = i;
+        card.classList.remove('qa-correct','qa-wrong');
+        if(chosen){
+          const val = Number(chosen.value);
+          if(val === questions[qIndex].a){ correct++; card.classList.add('qa-correct'); }
+          else { card.classList.add('qa-wrong'); }
+        } else {
+          // unanswered: style lightly
+          card.style.opacity = '0.95';
         }
+      });
+      const scoreEl = document.getElementById('score');
+      scoreEl.textContent = `Score: ${correct} / ${questions.length}`;
+      return correct;
+    }
 
-        function submitQuiz() {
-            let selectedOption = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
+    // controls
+    document.getElementById('checkBtn').addEventListener('click', ()=>{
+      checkAnswers();
+      // reveal answer key after checking
+      revealAnswers(false);
+    });
 
-            if (!selectedOption) {
-                alert("Please select an answer.");
-                return;
-            }
+    function revealAnswers(toggle=true){
+      const visible = answerKeyEl.style.display === 'block';
+      const shouldShow = toggle ? !visible : true;
+      answerKeyEl.style.display = shouldShow ? 'block' : 'none';
+      answerKeyEl.setAttribute('aria-hidden', !shouldShow);
+      document.getElementById('revealBtn').textContent = shouldShow ? 'Hide Answer Key' : 'Show Answer Key';
+    }
+    document.getElementById('revealBtn').addEventListener('click', ()=>revealAnswers(true));
 
-            let answer = selectedOption.value;
-            let questionData = quizData[currentQuestion];
-            let incorrectSpan = selectedOption.parentNode.querySelector(".incorrect");
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      if(confirm('Reset all answers?')){
+        const inputs = quizEl.querySelectorAll('input[type=radio]');
+        inputs.forEach(i=>i.checked=false);
+        document.getElementById('score').textContent = '';
+        quizEl.querySelectorAll('.card').forEach(c=>{c.classList.remove('qa-correct','qa-wrong'); c.style.opacity='1'});
+      }
+    });
 
-            if (answer === questionData.correctAnswer) {
-                score++;
-            } else {
-                incorrectSpan.style.display = "inline"; // Show "Incorrect" text
-            }
+    document.getElementById('printBtn').addEventListener('click', ()=>{
+      window.print();
+    });
 
-            // Move to the next question or end the quiz
-            currentQuestion++;
-            if (currentQuestion < quizData.length) {
-                loadQuestion();
-                quizContainer.scrollTop = 0; // Scroll to top for the next question
-            } else {
-                showResults();
-            }
-        }
+    document.getElementById('downloadBtn').addEventListener('click', ()=>{
+      const html = '<!doctype html>' + document.documentElement.outerHTML;
+      const blob = new Blob([html], {type: 'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'Intro-to-Computing-Quiz.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
 
-        function showResults() {
-            quizContainer.innerHTML = `<h2>You scored ${score} out of ${quizData.length}!</h2>`;
-        }
+    // render on load
+    render();
 
-        // Initial load
-        loadQuestion();
-    </script>
+    // inject answer key text for quick studying (hidden by default)
+    // Already injected by render().
 
-</body>
+  </script></body>
 </html>
