@@ -1,618 +1,396 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Java Midterm Practice</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #000;
-    color: #fff;
-}
-.question {
-    margin-bottom: 20px;
-}
-label {
-    display: block;
-    margin-bottom: 5px;
-}
-button {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-button:hover {
-    background-color: #3e8e41;
-}
-#results {
-    margin-top: 20px;
-    font-weight: bold;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computing Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0; /* Remove default body margins */
+            background-color: #000; /* Black background */
+            color: #fff; /* White text */
+            overflow: hidden; /* Prevent body scroll */
+        }
+
+        #quiz-container {
+            position: absolute; /* Absolute positioning for scrolling */
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 80px; /* Leave space for the button */
+            overflow-y: auto; /* Enable vertical scrolling within the container */
+            padding: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options li {
+            margin-bottom: 10px;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+            display: none; /* Initially hide incorrect feedback */
+        }
+
+        button {
+            position: fixed; /* Fixed position at the bottom */
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%); /* Center the button */
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50; /* Green button */
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #367c39; /* Darker green on hover */
+        }
+    </style>
 </head>
 <body>
 
-<h1>Java Midterm Practice</h1>
+    <h1>Introduction to Computing Quiz</h1>
 
-<div id="quiz">
-    <!-- Questions will be inserted here -->
-</div>
+    <div id="quiz-container">
+        </div>
 
-<button onclick="submitQuiz()">Submit Quiz</button>
+    <button onclick="submitQuiz()">Submit Quiz</button>
 
-<div id="results"></div>
+    <script>
+        const quizData = [
+            {
+                question: "Which of the following is NOT a key component of a computer?",
+                options: ["Hardware", "Software", "Network", "Operating System"],
+                correctAnswer: "Operating System"
+            },
+            {
+                question: "Which ancient device is considered the earliest known analog computer?",
+                options: ["Abacus", "Antikythera Mechanism", "Napier's Bones", "Pascaline"],
+                correctAnswer: "Antikythera Mechanism"
+            },
+            {
+                question: "Who invented Napier's Bones?",
+                options: ["Pascal", "Leibniz", "John Napier", "Charles Babbage"],
+                correctAnswer: "John Napier"
+            },
+            {
+                question: "The Pascaline was invented by whom?",
+                options: ["John Napier", "Blaise Pascal", "Gottfried Wilhelm Leibniz", "Charles Babbage"],
+                correctAnswer: "Blaise Pascal"
+            },
+            {
+                question: "Who improved Pascal's design to create the Stepped Reckoner, which could perform multiplication and division?",
+                options: ["Blaise Pascal", "John Napier", "Gottfried Wilhelm Leibniz", "Charles Babbage"],
+                correctAnswer: "Gottfried Wilhelm Leibniz"
+            },
+            {
+                question: "Who is known as the 'Father of the Computer'?",
+                options: ["Alan Turing", "Gottfried Wilhelm Leibniz", "Charles Babbage", "John von Neumann"],
+                correctAnswer: "Charles Babbage"
+            },
+            {
+                question: "Which machine designed by Charles Babbage introduced the concepts of memory, input, output, and a central processing unit (CPU)?",
+                options: ["Difference Engine", "Analytical Engine", "Pascaline", "Stepped Reckoner"],
+                correctAnswer: "Analytical Engine"
+            },
+            {
+                question: "Who is considered the first computer programmer?",
+                options: ["Alan Turing", "Ada Lovelace", "Grace Hopper", "John von Neumann"],
+                correctAnswer: "Ada Lovelace"
+            },
+            {
+                question: "Herman Hollerith's tabulating machine was used to process data from which U.S. Census?",
+                options: ["1880", "1890", "1900", "1910"],
+                correctAnswer: "1890"
+            },
+            {
+                question: "Where did Alan Turing work during World War II, contributing to the decoding of German encrypted messages (Enigma)?",
+                options: ["The Pentagon", "Bell Labs", "Bletchley Park", "MIT"],
+                correctAnswer: "Bletchley Park"
+            },
+            {
+                question: "When was the ENIAC developed?",
+                options: ["1940", "1945", "1951", "1960"],
+                correctAnswer: "1945"
+            },
+            {
+                question: "Which computer was known for accurately predicting the outcome of the 1952 U.S. Presidential election?",
+                options: ["ENIAC", "UNIVAC", "Colossus", "Analytical Engine"],
+                correctAnswer: "UNIVAC"
+            },
+             {
+                question: "Who proposed the von Neumann architecture?",
+                options: ["Alan Turing", "John von Neumann", "John Presper Eckert", "John Mauchly"],
+                correctAnswer: "John von Neumann"
+            },
+            {
+                question: "The von Neumann architecture includes which key components?",
+                options: ["CPU, Memory, Input, Output", "Transistors, Integrated Circuits, Microprocessors", "Vacuum Tubes, Relays, Switches", "Hard Drives, SSDs, Flash Memory"],
+                correctAnswer: "CPU, Memory, Input, Output"
+            },
+            {
+                question: "What is Moore's Law?",
+                options: ["The speed of computers doubles every year.", "The number of transistors on a microchip doubles approximately every two years.", "The cost of computing halves every year.", "The size of computers halves every year."],
+                correctAnswer: "The number of transistors on a microchip doubles approximately every two years."
+            },
+            {
+                question: "Which generation of computers used vacuum tubes?",
+                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
+                correctAnswer: "First Generation"
+            },
+            {
+                question: "Transistors were a key component of which generation of computers?",
+                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
+                correctAnswer: "Second Generation"
+            },
+            {
+                question: "Integrated circuits were introduced in which generation of computers?",
+                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
+                correctAnswer: "Third Generation"
+            },
+            {
+                question: "Microprocessors are associated with which generation of computers?",
+                options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
+                correctAnswer: "Fourth Generation"
+            },
+            {
+                question: "What is the primary function of an operating system (OS)?",
+                options: ["To run specific applications.", "To manage hardware and software resources.", "To browse the internet.", "To create documents."],
+                correctAnswer: "To manage hardware and software resources."
+            },
+            {
+                question: "Which of the following is an example of an operating system?",
+                options: ["Microsoft Office", "Google Chrome", "Windows", "Adobe Photoshop"],
+                correctAnswer: "Windows"
+            },
+            {
+                question: "What is the role of the CPU (Central Processing Unit)?",
+                options: ["Storing data", "Executing instructions", "Displaying images", "Connecting to the internet"],
+                correctAnswer: "Executing instructions"
+            },
+            {
+                question: "What does RAM stand for?",
+                options: ["Readily Available Memory", "Random Access Memory", "Read Access Memory", "Rapid Application Memory"],
+                correctAnswer: "Random Access Memory"
+            },
+            {
+                question: "Which type of memory is volatile?",
+                options: ["Hard Drive", "SSD", "RAM", "ROM"],
+                correctAnswer: "RAM"
+            },
+            {
+                question: "What is the purpose of ROM (Read-Only Memory)?",
+                options: ["Storing temporary data", "Storing the operating system", "Storing permanent instructions", "Running applications"],
+                correctAnswer: "Storing permanent instructions"
+            },
+            {
+                question: "Which storage device uses magnetic platters to store data?",
+                options: ["SSD", "Flash Drive", "Hard Drive", "RAM"],
+                correctAnswer: "Hard Drive"
+            },
+            {
+                question: "What does SSD stand for?",
+                options: ["Solid State Drive", "Simple Storage Device", "Serial State Drive", "Solid Serial Disk"],
+                correctAnswer: "Solid State Drive"
+            },
+            {
+                question: "Which input device is used to enter text and commands into a computer?",
+                options: ["Mouse", "Keyboard", "Scanner", "Microphone"],
+                correctAnswer: "Keyboard"
+            },
+            {
+                question: "Which output device displays visual information?",
+                options: ["Printer", "Speaker", "Monitor", "Plotter"],
+                correctAnswer: "Monitor"
+            },
+            {
+                question: "What is the function of a network interface card (NIC)?",
+                options: ["To display images", "To connect a computer to a network", "To store data", "To process instructions"],
+                correctAnswer: "To connect a computer to a network"
+            },
+            {
+                question: "What is the internet?",
+                options: ["A single network", "A collection of interconnected networks", "A type of software", "A hardware device"],
+                correctAnswer: "A collection of interconnected networks"
+            },
+            {
+                question: "What does URL stand for?",
+                options: ["Uniform Resource Locator", "Universal Resource Locator", "Unified Resource Locator", "Unit Resource Locator"],
+                correctAnswer: "Uniform Resource Locator"
+            },
+            {
+                question: "What is the purpose of a web browser?",
+                options: ["To create websites", "To view websites", "To manage files", "To send emails"],
+                correctAnswer: "To view websites"
+            },
+            {
+                question: "Which of the following is a web browser?",
+                options: ["Microsoft Word", "Excel", "Google Chrome", "PowerPoint"],
+                correctAnswer: "Google Chrome"
+            },
+            {
+                question: "What is an IP address?",
+                options: ["A physical address", "A logical address for identifying devices on a network", "A type of software", "A hardware component"],
+                correctAnswer: "A logical address for identifying devices on a network"
+            },
+            {
+                question: "What does LAN stand for?",
+                options: ["Large Area Network", "Local Area Network", "Long Area Network", "Limited Area Network"],
+                correctAnswer: "Local Area Network"
+            },
+            {
+                question: "What is the purpose of a router?",
+                options: ["To display images", "To connect multiple networks", "To store data", "To process instructions"],
+                correctAnswer: "To connect multiple networks"
+            },
+            {
+                question: "What is Wi-Fi?",
+                options: ["A wired network technology", "A wireless network technology", "A type of software", "A hardware component"],
+                correctAnswer: "A wireless network technology"
+            },
+            {
+                question: "What is Bluetooth?",
+                options: ["A long-range wireless communication technology", "A short-range wireless communication technology", "A type of software", "A hardware component"],
+                correctAnswer: "A short-range wireless communication technology"
+            },
+            {
+                question: "What is a computer program?",
+                options: ["A set of instructions for a computer to execute", "A hardware device", "An operating system", "A type of network"],
+                correctAnswer: "A set of instructions for a computer to execute"
+            },
+            {
+                question: "What is an algorithm?",
+                options: ["A computer program", "A step-by-step procedure for solving a problem", "A hardware device", "An operating system"],
+                correctAnswer: "A step-by-step procedure for solving a problem"
+            },
+            {
+                question: "Which of the following is a programming language?",
+                options: ["Microsoft Word", "Excel", "Java", "PowerPoint"],
+                correctAnswer: "Java"
+            },
+            {
+                question: "What is the purpose of a compiler?",
+                options: ["To run programs", "To translate source code into machine code", "To create documents", "To browse the internet"],
+                correctAnswer: "To translate source code into machine code"
+            },
+            {
+                question: "What is the purpose of debugging?",
+                options: ["To write code", "To find and fix errors in code", "To run programs", "To translate code"],
+                correctAnswer: "To find and fix errors in code"
+            },
+            {
+                question: "What is software?",
+                options: ["The physical components of a computer", "A set of instructions that tells a computer what to do", "The operating system", "The network connection"],
+                correctAnswer: "A set of instructions that tells a computer what to do"
+            },
+            {
+                question: "Which of the following is an example of application software?",
+                options: ["Windows", "macOS", "Microsoft Office", "Linux"],
+                correctAnswer: "Microsoft Office"
+            },
+            {
+                question: "What is system software?",
+                options: ["Software designed for specific tasks", "Software that manages hardware resources", "Software used for browsing the internet", "Software used for creating documents"],
+                correctAnswer: "Software that manages hardware resources"
+            },
+            {
+                question: "What is malware?",
+                options: ["A type of hardware", "Malicious software designed to harm a computer system", "A type of network", "A computer program"],
+                correctAnswer: "Malicious software designed to harm a computer system"
+            },
+            {
+                question: "What is a computer virus?",
+                options: ["A type of hardware", "A type of malware that replicates itself", "A type of network", "A computer program"],
+                correctAnswer: "A type of malware that replicates itself"
+            },
+            {
+                question: "What is the purpose of a firewall?",
+                options: ["To speed up a computer", "To protect a computer from unauthorized access", "To store data", "To display images"],
+                correctAnswer: "To protect a computer from unauthorized access"
+            }        ];
 
-<script>
-const questions = [
-    {
-        question: "Who is credited with creating Java?",
-        answers: {
-            a: "Bill Gates",
-            b: "James Gosling",
-            c: "Steve Jobs",
-            d: "Linus Torvalds"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What was Java's original name?",
-        answers: {
-            a: "Java",
-            b: "C++",
-            c: "Oak",
-            d: "Emerald"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "In what year was Java officially released?",
-        answers: {
-            a: "1991",
-            b: "1995",
-            c: "2000",
-            d: "2010"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which company acquired Sun Microsystems in 2010?",
-        answers: {
-            a: "Microsoft",
-            b: "IBM",
-            c: "Oracle",
-            d: "Google"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What was a primary motivation for creating Java?",
-        answers: {
-            a: "To replace COBOL",
-            b: "To create software for consumer electronic devices",
-            c: "To develop operating systems",
-            d: "To compete with C#"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is a key principle in Java's design?",
-        answers: {
-            a: "Complexity",
-            b: "Portability",
-            c: "Exclusivity",
-            d: "Obscurity"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What does 'WORA' stand for in the context of Java?",
-        answers: {
-            a: "Write Once, Read Anywhere",
-            b: "Write Once, Run Anywhere",
-            c: "Write Only, Run Always",
-            d: "Write Often, Run Anywhere"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which of the following is NOT a key feature of Java?",
-        answers: {
-            a: "Platform Independent",
-            b: "Object-Oriented",
-            c: "Direct Memory Access",
-            d: "Multithreaded"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "Which component contains tools to compile and debug Java programs?",
-        answers: {
-            a: "JRE",
-            b: "JVM",
-            c: "JDK",
-            d: "API"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is the role of the Java Virtual Machine (JVM)?",
-        answers: {
-            a: "To write Java code",
-            b: "To compile Java code",
-            c: "To execute Java bytecode",
-            d: "To manage hardware resources"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "Which Java Edition is used for enterprise-level applications?",
-        answers: {
-            a: "Java SE",
-            b: "Java ME",
-            c: "Java EE",
-            d: "Java FX"
-        },
-        correctAnswer: "c"
-    },
-     {
-        question: "Which Java Edition is designed for mobile phones and embedded systems?",
-        answers: {
-            a: "Java SE",
-            b: "Java ME",
-            c: "Java EE",
-            d: "Java FX"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which of the following is a Java framework?",
-        answers: {
-            a: ".NET",
-            b: "Spring",
-            c: "Ruby on Rails",
-            d: "Angular"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is the entry point of every Java program?",
-        answers: {
-            a: "class",
-            b: "System.out.println",
-            c: "main method",
-            d: "import statement"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What does `System.out.println()` do in Java?",
-        answers: {
-            a: "Reads input from the keyboard",
-            b: "Prints text to the screen",
-            c: "Declares a variable",
-            d: "Defines a class"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What makes Java platform-independent?",
-        answers: {
-            a: "Its syntax",
-            b: "The JVM",
-            c: "Its object-oriented nature",
-            d: "Its multithreading capabilities"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which feature of Java helps in performing multiple tasks simultaneously?",
-        answers: {
-            a: "Portability",
-            b: "Security",
-            c: "Multithreading",
-            d: "Object-orientation"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "Which of the following is NOT a design goal of Java?",
-        answers: {
-            a: "Simple and familiar",
-            b: "Object-oriented",
-            c: "Secure",
-            d: "Complex and intricate"
-        },
-        correctAnswer: "d"
-    },
-    {
-        question: "What does the JDK contain?",
-        answers: {
-            a: "Only the JVM",
-            b: "Only the JRE",
-            c: "Compiler, libraries, and JRE",
-            d: "Only standard class libraries"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is the primary function of the JRE?",
-        answers: {
-            a: "To develop Java programs",
-            b: "To compile Java programs",
-            c: "To run Java applications",
-            d: "To debug Java programs"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is bytecode in Java?",
-        answers: {
-            a: "Machine code",
-            b: "Source code",
-            c: "An intermediate representation of Java code",
-            d: "Assembly code"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "Which edition of Java is suitable for developing desktop applications?",
-        answers: {
-            a: "Java SE",
-            b: "Java ME",
-            c: "Java EE",
-            d: "All of the above"
-        },
-        correctAnswer: "a"
-    },
-    {
-        question: "Which of the following is NOT a valid Java edition?",
-        answers: {
-            a: "Java SE",
-            b: "Java ME",
-            c: "Java EE",
-            d: "Java XE"
-        },
-        correctAnswer: "d"
-    },
-    {
-        question: "What is the significance of Java being object-oriented?",
-        answers: {
-            a: "It makes the code faster.",
-            b: "It makes the code more secure.",
-            c: "It allows for modular and reusable code.",
-            d: "It allows direct memory access."
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "How does Java handle memory management?",
-        answers: {
-            a: "Manually by the programmer",
-            b: "Automatically through garbage collection",
-            c: "Through direct memory access",
-            d: "By allocating a fixed amount of memory at the start"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is the role of the `javac` command?",
-        answers: {
-            a: "To run Java programs",
-            b: "To compile Java source code",
-            c: "To debug Java programs",
-            d: "To create Java packages"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which feature helps Java prevent harmful operations?",
-        answers: {
-            a: "Its object-oriented nature",
-            b: "Its portability",
-            c: "Its security features",
-            d: "Its multithreading capabilities"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What type of applications commonly use Java EE?",
-        answers: {
-            a: "Mobile applications",
-            b: "Desktop applications",
-            c: "Enterprise-level applications",
-            d: "Embedded systems"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "Which technology is commonly used for developing Android applications?",
-        answers: {
-            a: "C++",
-            b: "Java",
-            c: "Python",
-            d: "Swift"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What does the `public static void` declaration signify in the main method?",
-        answers: {
-            a: "The method is private and cannot be accessed.",
-            b: "The method is the entry point of the program and can be accessed from anywhere.",
-            c: "The method returns a value.",
-            d: "The method is abstract and must be implemented."
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which of the following is a characteristic of robust code?",
-        answers: {
-            a: "High complexity",
-            b: "Efficient error handling",
-            c: "Low security",
-            d: "Limited portability"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is the advantage of using Just-In-Time (JIT) compilation in Java?",
-        answers: {
-            a: "It reduces security vulnerabilities.",
-            b: "It improves performance.",
-            c: "It simplifies the code.",
-            d: "It enhances portability."
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which of the following is a valid comment in Java?",
-        answers: {
-            a: "// This is a comment",
-            b: "/* This is a comment */",
-            c: "Both a and b",
-            d: "# This is a comment"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is the purpose of the `import` statement in Java?",
-        answers: {
-            a: "To define a new class",
-            b: "To include external libraries",
-            c: "To declare variables",
-            d: "To create objects"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is the function of the Java compiler?",
-        answers: {
-            a: "To execute Java code directly",
-            b: "To convert Java source code into bytecode",
-            c: "To manage memory allocation",
-            d: "To provide a graphical user interface"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which of the following is a valid class declaration in Java?",
-        answers: {
-            a: "class MyClass()",
-            b: "class MyClass {}",
-            c: "Class MyClass",
-            d: "class = MyClass"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is the default value of an uninitialized integer variable in Java?",
-        answers: {
-            a: "1",
-            b: "-1",
-            c: "0",
-            d: "Null"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "Which operator is used for assignment in Java?",
-        answers: {
-            a: "==",
-            b: "=",
-            c: ":=",
-            d: "->"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is the purpose of the `new` keyword in Java?",
-        answers: {
-            a: "To declare a variable",
-            b: "To create an object",
-            c: "To define a method",
-            d: "To include a library"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which of the following data types is used to store text in Java?",
-        answers: {
-            a: "int",
-            b: "float",
-            c: "String",
-            d: "boolean"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is the role of the garbage collector in Java?",
-        answers: {
-            a: "To allocate memory",
-            b: "To free up unused memory",
-            c: "To manage network connections",
-            d: "To optimize code execution"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which of the following access modifiers provides the most restrictive access?",
-        answers: {
-            a: "public",
-            b: "protected",
-            c: "private",
-            d: "default (package-private)"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is inheritance in Java?",
-        answers: {
-            a: "Creating new objects",
-            b: "Deriving new classes from existing classes",
-            c: "Deleting existing classes",
-            d: "Importing libraries"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which keyword is used to implement inheritance in Java?",
-        answers: {
-            a: "import",
-            b: "class",
-            c: "extends",
-            d: "implements"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is polymorphism in Java?",
-        answers: {
-            a: "The ability of an object to take on many forms",
-            b: "The process of compiling code",
-            c: "The act of importing libraries",
-            d: "The creation of new objects"
-        },
-        correctAnswer: "a"
-    },
-    {
-        question: "What is an interface in Java?",
-        answers: {
-            a: "A class with only public methods",
-            b: "A blueprint of a class",
-            c: "A class that can only be extended",
-            d: "A collection of related classes"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which keyword is used to define an interface in Java?",
-        answers: {
-            a: "class",
-            b: "extends",
-            c: "interface",
-            d: "implements"
-        },
-        correctAnswer: "c"
-    },
-    {
-        question: "What is the purpose of exception handling in Java?",
-        answers: {
-            a: "To prevent errors from occurring",
-            b: "To handle errors gracefully during runtime",
-            c: "To optimize code performance",
-            d: "To allocate memory"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "Which block is used to catch exceptions in Java?",
-        answers: {
-            a: "try",
-            b: "catch",
-            c: "finally",
-            d: "throw"
-        },
-        correctAnswer: "b"
-    },
-    {
-        question: "What is the purpose of the `finally` block in exception handling?",
-        answers: {
-            a: "To execute code if an exception occurs",
-            b: "To define the exception type",
-            c: "To execute code regardless of whether an exception occurs",
-            d: "To throw an exception"
-        },
-        correctAnswer: "c"
-    }
-];
+        const quizContainer = document.getElementById("quiz-container");
+        let currentQuestion = 0;
+        let score = 0;
 
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
+        function loadQuestion() {
+            const questionData = quizData[currentQuestion];
+            const questionElement = document.createElement("div");
+            questionElement.classList.add("question");
+            questionElement.innerHTML = `<p>${currentQuestion + 1}. ${questionData.question}</p>`;
 
-function buildQuiz() {
-    shuffleArray(questions); // Shuffle questions
+            const optionsList = document.createElement("ul");
+            optionsList.classList.add("options");
 
-    const quizContainer = document.getElementById("quiz");
-    let output = [];
+            questionData.options.forEach(option => {
+                const listItem = document.createElement("li");
+                listItem.innerHTML = `
+                    <label>
+                        <input type="radio" name="question${currentQuestion}" value="${option}">
+                        ${option}
+                        <span class="incorrect">Incorrect</span>
+                    </label>
+                `;
+                optionsList.appendChild(listItem);
+            });
 
-    questions.forEach((question, questionNumber) => {
-        let answers = [];
-
-        for (letter in question.answers) {
-            answers.push(
-                `<label>
-                    <input type="radio" name="question${questionNumber}" value="${letter}">
-                    ${letter}: ${question.answers[letter]}
-                </label>`
-            );
+            questionElement.appendChild(optionsList);
+            quizContainer.innerHTML = ""; // Clear previous question
+            quizContainer.appendChild(questionElement);
         }
 
-        output.push(
-            `<div class="question">
-                <b>${questionNumber + 1}.</b> ${question.question}
-                <div class="answers">
-                    ${answers.join("")}
-                </div>
-            </div>`
-        );
-    });
+        function submitQuiz() {
+            let selectedOption = document.querySelector(`input[name="question${currentQuestion}"]:checked`);
 
-    quizContainer.innerHTML = output.join("");
-}
+            if (!selectedOption) {
+                alert("Please select an answer.");
+                return;
+            }
 
-function submitQuiz() {
-    const quizContainer = document.getElementById("quiz");
-    const resultsContainer = document.getElementById("results");
-    let numCorrect = 0;
+            let answer = selectedOption.value;
+            let questionData = quizData[currentQuestion];
+            let incorrectSpan = selectedOption.parentNode.querySelector(".incorrect");
 
-    questions.forEach((question, questionNumber) => {
-        const selector = `input[name=question${questionNumber}]:checked`;
-        const userAnswer = (document.querySelector(selector) || {}).value;
+            if (answer === questionData.correctAnswer) {
+                score++;
+            } else {
+                incorrectSpan.style.display = "inline"; // Show "Incorrect" text
+            }
 
-        if (userAnswer === question.correctAnswer) {
-            numCorrect++;
+            // Move to the next question or end the quiz
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+                quizContainer.scrollTop = 0; // Scroll to top for the next question
+            } else {
+                showResults();
+            }
         }
-    });
 
-    resultsContainer.innerHTML = `You got ${numCorrect} out of ${questions.length} questions correct.`;
-}
+        function showResults() {
+            quizContainer.innerHTML = `<h2>You scored ${score} out of ${quizData.length}!</h2>`;
+        }
 
-buildQuiz();
-</script>
+        // Initial load
+        loadQuestion();
+    </script>
 
 </body>
 </html>
